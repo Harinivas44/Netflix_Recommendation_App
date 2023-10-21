@@ -1,0 +1,149 @@
+
+STEPS:
+
+	1. We need to convert the unstructured data to a structured format.
+
+	2. And convert the document of words into term frequency(DTF) and you need to remove words like is,the ,that becaz these are stoping words
+	   doesnt give relevance to what we search.It doesnt make sense at all.
+	
+	3. After preparing the Document Term Frequency , you have to normalize the term frequency of the words becaz we dont know that a particular repeats how 
+	   many times in set of words.		
+
+	4. Compute the cosine similarity between user search item and rest of the products/documents/items.
+
+	5. Based on the high similarity score the documents are get retrieved.
+
+
+_____________________________________________________________________________________________________________________________________________________________________
+
+Document Term Frequency Matrix
+
+
+Document 1: The game of life is a game of everlasting learning
+Document 2: The unexamined life is not worth living
+Document 3: Never stop learning
+
+
+Search Query
+
+test doc : life learning
+______________________________________________________________________________________________________________________________________________________________________
+Document 1 :
+
+TF for test doc :
+Test Doc       life learning
+Term Frequency  1	1
+
+NormalizedTF for test doc :
+Test Doc       life learning
+NormalizedTF   0.5	0.5
+
+TF for Document 1
+
+Document1	      the 	game	 of	life	 is	 a	everlasting	learning
+Term Frequency  	1	  2	 2	1	 1	 1	  1		      1
+
+
+Normalized TF for Document 1
+
+Document1	    the	  game	 of	 life	 is	 a	everlasting	learning
+Normalized TF	    0.1	  0.2	 0.2	  0.1    0.1	 0.1	    0.1	        0.1
+
+Convert Doc 1 to a shorter form ( basically here I am doing Dimensionality reduction Converting document 1 dimension into query(test doc) dimension)
+
+Document1	    	life	 learning
+Normalized TF	         0.1	  0.1
+
+
+
+COSINE SIMILARITY
+
+
+Cosine Similarity (d1, d2) =  Dot product(d1, d2) / ||d1|| * ||d2||
+
+Dot product (d1,d2) = d1[0] * d2[0] + d1[1] * d2[1] * … * d1[n] * d2[n]
+||d1|| = square root(d1[0]2 + d1[1]2 + ... + d1[n]2)
+||d2|| = square root(d2[0]2 + d2[1]2 + ... + d2[n]2)
+
+Dot product(testdoc, Document1) 
+     = ((0.5) * (0.1) + (0.5)*(0.1))
+     = 0.1
+
+||testdoc|| = sqrt((0.5)^2 + (0.5)^2) = 0.707106781
+
+||Document1|| = sqrt((0.1)^2 + (0.1)^2) = 0.141421356
+
+Cosine Similarity(Query, Document) = 0.1 / (0.707106781) * (0.141421356)
+                                        = 0.1 / 0.1
+                                        = 1
+
+_____________________________________________________________________________________________________________________________________________________________________
+Document 2 
+
+TF for Document 2
+
+Document2			the	unexamined	life	is	not	worth	living
+Term Frequency	 		1	   1	         1	1	1	1	   1
+
+
+Normalized TF for Document 2
+
+Document2	      the	      unexamined	life	   is	      not		worth	living
+Normalized TF	0.142857	0.142857	0.142857	   0.142857	0.142857	0.142857	0.142857
+
+Convert Doc 2 to a shorter form ( basically here I am doing Dimensionality reduction Converting document 2 dimension into query(test doc) dimension)
+
+Document 2 	    	life	        learning 
+Normalized TF	         0.142857          0 (becaz the word is not present in Doc 2)
+
+
+Dot product(testdoc, Document2) 
+     = ((0.5) * (0.142857) + (0.5)*(0)) 
+     = 0.0714285
+
+||testdoc|| = sqrt((0.5)^2 + (0.5)^2) = 0.707106781
+
+||Document2|| = sqrt((0.142857)^2) = sqrt(0.020408122) = 0.142856998
+
+Cosine Similarity(testdoc, Document2) = 0.0714285 / (0.707106781) * (0.142856998)
+                                        = 0.0714285/ 0.101015152
+                                        = 0.707106791
+
+___________________________________________________________________________________________________________________________________________________________________
+Document 3:
+
+TF for Document 3
+
+Document3	never	stop	learning
+Term Frequency	1	1	1
+
+
+Normalized TF for Document 3
+
+Document3	never		stop		learning
+Normalized TF	0.333333	0.333333	0.333333
+
+Convert Doc 3 to a shorter form ( basically here I am doing Dimensionality reduction Converting document 3 dimension into query(test doc) dimension)
+
+Document 3	    	life	        learning 
+Normalized TF	         0              0.33333 (becaz the word is not present in Doc 3)
+
+
+Dot product(testdoc, Document3) 
+     = ( (0.5)*(0) + (0.5) * (0.333333) )
+     = 0.1666665
+
+||testdoc|| = sqrt((0.5)^2 + (0.5)^2) = 0.707106781
+
+||Document3|| = sqrt((0.333333)^2) = sqrt(0.111110889) = 0.333333
+
+Cosine Similarity(testdoc, Document3) = 0.1666665 / (0.707106781) * (0.333333)
+                                        = 0.1666665 / 0.235702025
+                                        = 0.70710678
+
+__________________________________________________________________________________________________________________________________________________________
+Final Conclusion :
+
+So Based on the query (test Doc) the recommendation can be given from doc 1 which have high similarity Score.
+
+___________________________________________________________________________________________________________________________________________________________
